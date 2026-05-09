@@ -1,0 +1,45 @@
+{
+  "name": "sds-tech-main",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000S\u0000D\u0000S\u0000-\u0000T\u0000e\u0000c\u0000h\u0000\r\u0000 \u0000#\u0000 \u0000o\u0000n\u0000e\u0000t\u0000w\u0000o\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-app-rewired start",
+    "server": "node api-server.js",
+    "dev": "concurrently \"node api-server.js\" \"react-app-rewired start\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@chapa_et/inline.js": "^1.0.1",
+    "axios": "^1.13.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "firebase": "^12.12.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-firebase-hooks": "^5.1.1",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^5.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "react-app-rewired": "^2.2.1"
+  }
+}

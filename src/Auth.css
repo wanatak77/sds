@@ -1,0 +1,487 @@
+/* Auth Pages - Light Mode Only */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 20px;
+}
+
+.auth-card {
+  background: #fef2f2;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #fecaca;
+}
+
+.auth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.auth-card h2 {
+  color: #dc2626;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.5px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  color: #dc2626 !important;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.2px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 8px;
+  border: 3px solid #1e40af;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.3);
+  background: #ffffff;
+  color: #1f2937;
+}
+
+.form-group input::placeholder {
+  color: #6b7280;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* Form hints styling */
+.form-hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+
+button {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: none;
+  background: #dc2626;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.auth-error-message {
+  color: #dc2626;
+  background: #fef2f2;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid #fecaca;
+  font-weight: 500;
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #6b7280;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: #2563eb !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.auth-footer a:hover {
+  color: #1e40af !important;
+  text-decoration-thickness: 3px;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.auth-success {
+  color: #059669;
+  background: #f0fdf4;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid #bbf7d0;
+  font-weight: 500;
+}
+
+.auth-footer a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: var(--auth-footer-underline, #667eea);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.auth-footer a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--spinner-track, rgba(10, 25, 47, 0.3));
+  border-top-color: var(--spinner-active, #0a192f);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Input Prompts */
+.form-group input::placeholder {
+  color: var(--auth-placeholder, #b7babc);
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+/* Light Mode Overrides */
+body.light-mode-body {
+  --auth-bg: linear-gradient(135deg, #f0f8ff 0%, #e6f0ff 100%);
+  --auth-card-bg: rgba(255, 255, 255, 0.9);
+  --auth-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                     inset 0 0 12px rgba(255, 215, 0, 0.1);
+  --auth-card-border: rgba(255, 215, 0, 0.3);
+  --auth-accent-top: #ffd700;
+  --auth-accent-bottom: #e63946;
+  --auth-heading: #1a3a6e;
+  --auth-heading-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --auth-label: #457b9d;
+  --auth-input-border: #a8dadc;
+  --auth-input-bg: rgba(255, 255, 255, 0.9);
+  --auth-input-text: #333;
+  --auth-input-focus: #e63946;
+  --auth-input-focus-glow: rgba(230, 57, 70, 0.2);
+  --auth-btn-bg: linear-gradient(to right, #e63946 0%, #ffd700 100%);
+  --auth-btn-text: white;
+  --auth-btn-hover: linear-gradient(to right, #ffd700 0%, #e63946 100%);
+  --auth-btn-shadow: rgba(230, 57, 70, 0.2);
+  --auth-error-text: #fa1238;
+  --auth-error-bg: rgba(234, 48, 79, 0.1);
+  --auth-error-border: #d90429;
+  --auth-footer-text: #457b9d;
+  --auth-footer-link: #1a3a6e;
+  --auth-footer-link-hover: #e63946;
+  --auth-footer-underline: #457b9d;
+  --spinner-track: rgba(255, 255, 255, 0.3);
+  --spinner-active: #457b9d;
+  --auth-placeholder: #7a9cc6;
+}
+
+/* Animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dark Mode Text Visibility Fixes - Only these elements are modified */
+body.dark-mode-body .auth-card .form-group input,
+body.dark-mode-body .auth-card .form-group label,
+body.dark-mode-body .auth-card .auth-footer,
+body.dark-mode-body .auth-card .auth-footer a,
+body.dark-mode-body .auth-card .error-message,
+body.dark-mode-body .auth-card .auth-footer p {  /* This is the new line added */
+  color: #10a33f;
+}
+
+body.dark-mode-body .auth-card .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}/* Add this at the end of your CSS file */
+body.dark-mode-body .auth-card .auth-footer,
+body.dark-mode-body .auth-card .auth-footer a {
+  color: #ffffff !important;
+}
+
+body.dark-mode-body .auth-card .auth-footer a:hover {
+  color: #ffffff !important;
+  opacity: 0.8;
+}
+
+body.dark-mode-body .auth-card .auth-footer a::after {
+  background: #ffffff !important;
+}/* Add this to your Auth.css file */
+body.dark-mode-body .auth-card .auth-switch {
+  color: #ffffff;
+}
+
+body.dark-mode-body .auth-card .auth-switch span {
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+body.dark-mode-body .auth-card .auth-switch span:hover {
+  opacity: 0.8;
+}/* Add these media queries to your existing Auth.css */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+    margin-top: 20px;
+  }
+
+  .auth-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group input {
+    padding: 12px;
+  }
+
+  button {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.2rem;
+  }
+
+  .auth-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+  }
+
+  .form-group input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .auth-switch {
+    font-size: 0.9rem;
+  }
+}/* Responsive styles for both login and register pages */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+    margin-top: 20px;
+  }
+
+  .auth-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group input {
+    padding: 12px;
+  }
+
+  button {
+    padding: 12px;
+  }
+
+  .auth-switch {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.2rem;
+    border-radius: 12px;
+  }
+
+  .auth-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+  }
+
+  .form-group input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .auth-switch {
+    font-size: 0.85rem;
+  }
+
+  .auth-error, 
+  .auth-success {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+}/* Error Message Styling - Blue Background with Red Text (Standalone Class) */
+.error-message {
+  color: #e63946 !important;
+  background: #0a192f !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  border-left: 3px solid #e63946 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+/* Theme Override Protection */
+body.dark-mode-body .error-message,
+body.light-mode-body .error-message,
+body.dark-mode-body .auth-card .error-message, 
+body.light-mode-body .auth-card .error-message {
+  color: #e63946 !important;
+  background: #0a192f !important;
+  border-left-color: #e63946 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .error-message {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-message {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    border-left-width: 2px;
+  }
+}/* Dark Mode Error Message Override - Register Page Only */
+body.dark-mode-body .register-page .error-message,
+body.dark-mode-body .register-page .auth-card .error-message {
+  color: #10a33f !important; /* Green text */
+  background: #0a192f !important; /* Keep blue background */
+  border-left-color: #10a33f !important; /* Green left border */
+}
+
+/* Keep all other error message styles unchanged */
+.error-message {
+  color: #e63946 !important;
+  background: #0a192f !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  border-left: 3px solid #e63946 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+/* Existing theme overrides (keep these) */
+body.light-mode-body .error-message,
+body.light-mode-body .auth-card .error-message {
+  color: #e63946 !important;
+  background: #0a192f !important;
+  border-left-color: #e63946 !important;
+}
+
+/* Responsive adjustments (keep these) */
+@media (max-width: 768px) {
+  .error-message {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-message {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    border-left-width: 2px;
+  }
+}

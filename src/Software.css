@@ -1,0 +1,96 @@
+/* Software-specific styles */
+.software-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: rgba(25, 118, 210, 0.05);
+}
+
+.software-header {
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(25,118,210,0.1) 0%, rgba(255,255,255,0.1) 100%);
+}
+
+.software-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.software-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.software-features {
+  list-style-type: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.software-features li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(25, 118, 210, 0.3);
+}
+
+.software-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #1976d2;
+  color: white;
+}
+
+.software-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.software-project {
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  background-color: rgba(25, 118, 210, 0.1);
+  border: 1px solid rgba(25, 118, 210, 0.3);
+}
+
+/* Dark mode overrides */
+.dark-mode .software-container {
+  background-color: rgba(10, 25, 41, 0.8);
+}
+
+.dark-mode .software-header {
+  background: linear-gradient(135deg, rgba(25,118,210,0.2) 0%, rgba(0,0,0,0.2) 100%);
+}
+
+.dark-mode .software-card {
+  background-color: #0a1929;
+}
+
+.dark-mode .software-features li {
+  border-bottom: 1px dashed rgba(25, 118, 210, 0.5);
+}
+
+.dark-mode .software-project {
+  background-color: rgba(25, 118, 210, 0.15);
+  border: 1px solid rgba(25, 118, 210, 0.5);
+}
+
+@media (max-width: 768px) {
+  .software-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .software-grid {
+    grid-template-columns: 1fr;
+  }
+}

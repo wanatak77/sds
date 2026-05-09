@@ -1,0 +1,87 @@
+/* ── Admin Join Team ────────────────────────────── */
+.admin-join-team {
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-join-team h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.admin-join-team h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 1.5rem 0 .75rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-join-team .content-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  margin-bottom: 1.5rem;
+}
+
+.admin-join-team ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.admin-join-team ul li {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: .875rem;
+  color: #0f172a;
+  transition: background .15s;
+}
+.admin-join-team ul li:hover { background: #eef2ff; border-color: #c7d2fe; }
+
+.admin-join-team table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-join-team table th,
+.admin-join-team table td {
+  padding: .75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: .85rem;
+}
+.admin-join-team table th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #475569;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.admin-join-team table tr:hover td { background: #f8fafc; }
+
+.admin-join-team button {
+  padding: .4rem .85rem;
+  margin-right: .4rem;
+  border: none;
+  border-radius: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.admin-join-team .approve-btn { background: #d1fae5; color: #065f46; }
+.admin-join-team .approve-btn:hover { background: #10b981; color: #fff; }
+.admin-join-team .reject-btn  { background: #fee2e2; color: #991b1b; }
+.admin-join-team .reject-btn:hover  { background: #ef4444; color: #fff; }

@@ -1,0 +1,269 @@
+/* ═══════════════════════════════════════════════════
+   SDS TECH — TEACHER DASHBOARD  (Simple & Clear)
+═══════════════════════════════════════════════════ */
+
+:root {
+  --sidebar-w:      260px;
+  --topbar-h:       68px;
+  --primary:        #0d9488;
+  --bg:             #f1f5f9;
+  --text:           #000000;
+  --border:         #cbd5e1;
+  --radius:         12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.teacher-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.teacher-sidebar {
+  width: var(--sidebar-w);
+  background: #064e3b;
+  color: #ffffff;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+.sidebar-logo { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.sidebar-title { font-size: 1.1rem; font-weight: 800; }
+
+.sidebar-menu { padding: 1.5rem 1rem; flex: 1; }
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+.menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.menu-item.active { background: #fff; color: #064e3b; }
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: auto;
+}
+
+.sidebar-logout-btn {
+  width: calc(100% - 2rem);
+  margin: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  color: #ffffff;
+  border: 1.5px solid #ffffff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.sidebar-logout-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* ── Main Area ── */
+.teacher-main-area {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  background: var(--bg);
+}
+
+.teacher-topbar {
+  height: var(--topbar-h);
+  background: #ffffff;
+  border-bottom: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 1rem; }
+.topbar-title { font-size: 1.25rem; font-weight: 800; color: #000; }
+
+.mobile-toggle {
+  display: none;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+}
+.user-name { font-weight: 800; color: #000; }
+.admin-logout-btn { background: #000; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
+
+.teacher-content-padding { padding: 2.5rem; }
+
+/* ── Simple Form ── */
+.exam-form {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.form-group { margin-bottom: 2rem; }
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 0.75rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #000 !important;
+  background: #fff !important;
+  outline: none;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: #0d9488; }
+
+/* ── Simple Options ── */
+.section-label { font-size: 1.2rem; font-weight: 800; margin: 2rem 0 1rem; border-bottom: 2px solid #000; display: inline-block; }
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.option-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-label {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #0d9488;
+}
+
+.option-input input {
+  padding: 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000 !important;
+  background: #fff !important;
+}
+
+.submit-question-btn {
+  background: #064e3b;
+  color: #fff;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .teacher-sidebar { transform: translateX(-100%); }
+  .teacher-sidebar.open { transform: translateX(0); }
+  .teacher-main-area { margin-left: 0; }
+  .mobile-toggle { display: block; }
+  .user-info { display: none; }
+}
+
+@media (max-width: 768px) {
+  .teacher-content-padding { padding: 1.5rem; }
+  .options-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .exam-form { padding: 1.5rem; }
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+}
+
+/* Welcome Card */
+.teacher-welcome-card {
+  background: #064e3b;
+  color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.welcome-content h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.welcome-stats .stat-num { font-size: 3rem; font-weight: 900; display: block; }
+
+.teacher-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+.teacher-stat-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  text-align: center;
+}
+.stat-value { font-size: 2.5rem; font-weight: 900; color: #064e3b; }

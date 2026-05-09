@@ -1,0 +1,86 @@
+/* ── Admin Graphics ─────────────────────────────── */
+.admin-graphics {
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-graphics .admin-content h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.admin-graphics .error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  font-size: .875rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ef4444;
+}
+
+.admin-graphics .admin-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-graphics .content-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.admin-graphics .content-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-graphics table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-graphics table th,
+.admin-graphics table td {
+  padding: .75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: .85rem;
+}
+.admin-graphics table th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #475569;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.admin-graphics table td { color: #0f172a; }
+.admin-graphics table tr:hover td { background: #f8fafc; }
+
+.admin-graphics button {
+  padding: .4rem .85rem;
+  margin-right: .4rem;
+  border: none;
+  border-radius: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.admin-graphics button:first-of-type {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.admin-graphics button:first-of-type:hover { background: #1e40af; color: #fff; }
+.admin-graphics button:last-child {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.admin-graphics button:last-child:hover { background: #ef4444; color: #fff; }
