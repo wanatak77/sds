@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { useHistory, useLocation } from "react-router-dom";
 import { logout, getUserPayments, sendMessage, sendChunkedMessage, listenToMessages, uploadFile, getPaymentConfig, submitManualPayment } from "./firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from './firebase';
 import { useTheme } from './ThemeContext';
 import PaymentModal from './components/PaymentModal';
@@ -276,13 +276,18 @@ const Dashboard = () => {
     setSavingProfile(true);
     setSaveMsg('');
     try {
-      await updateDoc(doc(db, 'users', currentUser.uid), {
+      const trimmedProfile = {
         fullName:    editedProfile.fullName.trim(),
         phoneNumber: editedProfile.phoneNumber.trim(),
         course:      editedProfile.course.trim(),
-        updatedAt:   new Date()
-      });
-      setUserData(prev => ({ ...prev, ...editedProfile }));
+      };
+      
+      await setDoc(doc(db, 'users', currentUser.uid), {
+        ...trimmedProfile,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      
+      setUserData(prev => ({ ...prev, ...trimmedProfile }));
       setIsEditingProfile(false);
       setSaveMsg('✅ Profile updated successfully!');
       setTimeout(() => setSaveMsg(''), 3000);

@@ -640,8 +640,26 @@ body {
   .footer-links { justify-content: center; }
 }
 
-@media (max-width: 480px) {
-  .nav-actions { display: none; } /* Could add a hamburger menu later */
+@media (max-width: 550px) {
+  .nav-brand .nav-link { display: none !important; }
+  
+  .nav-container {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .nav-actions { 
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .nav-btn, .cta-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .logo {
+    height: 32px;
+  }
   
   .updates-grid, .support-grid { grid-template-columns: 1fr; }
 }
