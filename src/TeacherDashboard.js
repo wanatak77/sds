@@ -205,8 +205,7 @@ const TeacherDashboard = () => {
         <header className="teacher-topbar">
           <div className="topbar-left">
             <button className="mobile-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <i className={`fas ${sidebarOpen ? 'fa-times' : 'fa-bars'}`} />
-              <span className="toggle-label">Menu</span>
+              {sidebarOpen ? '✕' : '☰'}
             </button>
             <h1 className="topbar-title">
               {activeTab === 'overview' ? 'Dashboard Overview' : activeTab === 'add' ? (editingId ? 'Edit Question' : 'Submit Question') : 'My Submissions'}

@@ -125,13 +125,12 @@ body {
   background: #064e3b;
   color: #fff;
   border: none;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.7rem;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
-  align-items: center;
-  gap: 0.4rem;
+  line-height: 1;
 }
 
 .mobile-toggle .toggle-label {
