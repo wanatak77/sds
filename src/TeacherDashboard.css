@@ -137,11 +137,6 @@ body {
   font-size: 0.85rem;
 }
 
-@media (max-width: 480px) {
-  .mobile-toggle .toggle-label { display: none; }
-  .mobile-toggle { padding: 0.5rem 0.65rem; font-size: 1.2rem; }
-}
-
 .user-profile {
   display: flex;
   align-items: center;
@@ -234,7 +229,7 @@ body {
   .teacher-sidebar { transform: translateX(-100%); }
   .teacher-sidebar.open { transform: translateX(0); }
   .teacher-main-area { margin-left: 0; }
-  .mobile-toggle { display: flex; }
+  .mobile-toggle { display: flex; align-items: center; justify-content: center; }
   .user-info { display: none; }
 }
 
@@ -242,6 +237,12 @@ body {
   .teacher-content-padding { padding: 1.5rem; }
   .options-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .exam-form { padding: 1.5rem; }
+  .mobile-toggle { display: flex; font-size: 1.3rem; padding: 0.45rem 0.7rem; }
+}
+
+@media (max-width: 480px) {
+  .mobile-toggle { display: flex; font-size: 1.3rem; padding: 0.45rem 0.65rem; }
+  .mobile-toggle .toggle-label { display: none; }
 }
 
 .sidebar-overlay {
