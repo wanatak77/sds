@@ -122,13 +122,25 @@ body {
 
 .mobile-toggle {
   display: none;
-  background: #000;
+  background: #064e3b;
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mobile-toggle .toggle-label {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .mobile-toggle .toggle-label { display: none; }
+  .mobile-toggle { padding: 0.5rem 0.65rem; font-size: 1.2rem; }
 }
 
 .user-profile {
@@ -223,7 +235,7 @@ body {
   .teacher-sidebar { transform: translateX(-100%); }
   .teacher-sidebar.open { transform: translateX(0); }
   .teacher-main-area { margin-left: 0; }
-  .mobile-toggle { display: block; }
+  .mobile-toggle { display: flex; }
   .user-info { display: none; }
 }
 
