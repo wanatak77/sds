@@ -26,7 +26,7 @@ import ListUsers from './ListUsers';
 import './AdminDashboard.css';
 import { signOut } from 'firebase/auth';
 import { ADMIN_EMAILS } from './constants';
-import { doc, getDoc, collection, query, where, onSnapshot, updateDoc, deleteDoc, addDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs, collection, query, where, onSnapshot, updateDoc, deleteDoc, addDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
 const AdminHome = () => {
@@ -55,7 +55,9 @@ const AdminHome = () => {
   const [grantingFor, setGrantingFor] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [isGranting, setIsGranting] = useState(false);
-
+  // New state for filtering questions by subject/teacher in All Questions view
+  const [filterSubject, setFilterSubject] = useState('all');
+  const [filterTeacher, setFilterTeacher] = useState('all');
   // Exam Approvals State
   const [pendingExams, setPendingExams] = useState([]);
   const [previewExam, setPreviewExam] = useState(null);
@@ -68,19 +70,31 @@ const AdminHome = () => {
     correct: 0,
     explanation: ''
   });
+  // All Questions State
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
   const [isSubmittingExam, setIsSubmittingExam] = useState(false);
 
   const ALL_SUBJECTS = [
-    { id: 'all', label: 'Full Access (All Subjects)' },
-    { id: 'physics', label: 'Physics' },
-    { id: 'chemistry', label: 'Chemistry' },
-    { id: 'biology', label: 'Biology' },
-    { id: 'mathematics', label: 'Mathematics' },
-    { id: 'history', label: 'History' },
-    { id: 'geography', label: 'Geography' },
-    { id: 'economics', label: 'Economics' },
-    { id: 'civics', label: 'Civics' },
-    { id: 'english', label: 'English' },
+    { id: 'all',                   label: 'All Subjects'            },
+    { id: 'Physics',               label: 'Physics'                 },
+    { id: 'Chemistry',             label: 'Chemistry'               },
+    { id: 'Biology',               label: 'Biology'                 },
+    { id: 'Mathematics',           label: 'Mathematics'             },
+    { id: 'History',               label: 'History'                 },
+    { id: 'Geography',             label: 'Geography'               },
+    { id: 'Economics',             label: 'Economics'               },
+    { id: 'Civics',                label: 'Civics'                  },
+    { id: 'English',               label: 'English'                 },
+    { id: 'Remedial Physics',      label: 'Remedial Physics'        },
+    { id: 'Remedial Chemistry',    label: 'Remedial Chemistry'      },
+    { id: 'Remedial Biology',      label: 'Remedial Biology'        },
+    { id: 'Remedial Mathematics',  label: 'Remedial Mathematics'    },
+    { id: 'Remedial History',      label: 'Remedial History'        },
+    { id: 'Remedial Geography',    label: 'Remedial Geography'      },
+    { id: 'Remedial Economics',    label: 'Remedial Economics'      },
+    { id: 'Remedial Civics',       label: 'Remedial Civics'         },
+    { id: 'Remedial English',      label: 'Remedial English'        },
   ];
 
   useEffect(() => {
@@ -139,6 +153,19 @@ const AdminHome = () => {
     setPaymentsLoading(false);
   };
 
+  const fetchAllQuestions = async () => {
+    setQuestionsLoading(true);
+    try {
+      const q = query(collection(db, 'examQuestions'));
+      const snap = await getDocs(q);
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setAllQuestions(data);
+    } catch (err) {
+      console.error('Failed to fetch questions', err);
+    }
+    setQuestionsLoading(false);
+  };
+
   const fetchActivities = async () => {
     setActivitiesLoading(true);
     const result = await getAllActivities();
@@ -147,6 +174,12 @@ const AdminHome = () => {
     }
     setActivitiesLoading(false);
   };
+
+  useEffect(() => {
+  if (activeTab === 'all-questions') {
+    fetchAllQuestions();
+  }
+}, [activeTab]);
 
   useEffect(() => {
     if ((activeTab === 'manual-approvals' || activeTab === 'manual-grant') && user) {
@@ -258,7 +291,19 @@ const AdminHome = () => {
     setIsGranting(false);
   };
 
-  const handleReject = async (id) => {
+  const handleDeleteQuestion = async (id) => {
+  if (!window.confirm('Delete this question permanently?')) return;
+  try {
+    await deleteDoc(doc(db, 'examQuestions', id));
+    recordActivity(user.uid, user.email, 'Admin Delete Question', `ID: ${id}`);
+    alert('Question deleted');
+    fetchAllQuestions();
+  } catch (err) {
+    alert('Failed to delete: ' + err.message);
+  }
+};
+
+  const handleRejectManual = async (id) => {
     const reason = window.prompt('Enter rejection reason:');
     if (reason === null) return;
     await rejectManualPayment(id, reason);
@@ -327,7 +372,8 @@ const AdminHome = () => {
     { id: 'manual-approvals',icon: 'fa-file-invoice-dollar', label: 'Verify Subject',      section: 'Management' },
     { id: 'manual-grant',    icon: 'fa-user-check',     label: 'Grant Manual Access',    section: 'Management' },
     { id: 'settings',        icon: 'fa-cog',            label: 'Platform Settings',      section: 'Management' },
-    { id: 'add-exam',        icon: 'fa-plus-circle',    label: 'Add New Question',       section: 'Management' },
+    { id: 'all-questions', icon: 'fa-list',        label: 'All Questions',    section: 'Management' },
+    { id: 'add-exam',      icon: 'fa-plus-circle',  label: 'Add Question',     section: 'Management' },
     { id: 'exam-approvals',  icon: 'fa-check-square',   label: 'Exam Approvals',         section: 'Management' },
     { id: 'activity',        icon: 'fa-chart-line',     label: 'Activity Track',         section: 'Management' },
   ];
@@ -505,126 +551,164 @@ const AdminHome = () => {
             </div>
           )}
 
-          {/* Verification / Grant Modal Overlay */}
-          {grantingFor && (
-            <div className="grant-modal-overlay" onClick={() => setGrantingFor(null)}>
-              <div className="grant-modal-card" onClick={e => e.stopPropagation()}>
-                <div className="modal-icon">🗝️</div>
-                <h3>Verify Subject Access</h3>
-                <p>Granting access to: <strong>{grantingFor.userEmail || grantingFor.email}</strong></p>
-                
-                <div className="grant-form">
-                  <label className="grant-label">Choose Access Level:</label>
-                  <select 
-                    value={selectedSubject} 
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="grant-select"
-                  >
-                    <option value="all">🚀 Full Access (All Subjects)</option>
-                    <option value="physics">Physics</option>
-                    <option value="chemistry">Chemistry</option>
-                    <option value="biology">Biology</option>
-                    <option value="mathematics">Mathematics</option>
-                    <option value="history">History</option>
-                    <option value="geography">Geography</option>
-                    <option value="economics">Economics</option>
-                    <option value="civics">Civics</option>
-                    <option value="english">English</option>
-                  </select>
-                  
-                  <div className="modal-actions">
-                    <button 
-                      className="confirm-grant-btn" 
-                      onClick={handleManualGrantFinal}
-                      disabled={isGranting}
-                    >
-                      {isGranting ? 'Updating Permissions...' : 'Verify Access Now'}
-                    </button>
-                    <button className="cancel-grant-btn" onClick={() => setGrantingFor(null)}>
-                      Cancel
-                    </button>
+          {activeTab === 'all-questions' && (() => {
+            // build unique teacher list from loaded questions
+            const teacherMap = {};
+            allQuestions.forEach(q => {
+              if (q.teacherId) teacherMap[q.teacherId] = q.teacherEmail || q.teacherId;
+            });
+            const teachers = Object.entries(teacherMap); // [[id, email], ...]
+
+            // apply both filters
+            const filtered = allQuestions
+              .filter(q => filterSubject === 'all' || q.subject === filterSubject)
+              .filter(q => filterTeacher === 'all' || q.teacherId === filterTeacher);
+
+            // group by subject
+            const grouped = filtered.reduce((acc, q) => {
+              const subj = q.subject || 'Uncategorized';
+              if (!acc[subj]) acc[subj] = [];
+              acc[subj].push(q);
+              return acc;
+            }, {});
+
+            return (
+              <div className="admin-content">
+                {/* Header bar */}
+                <div className="content-card" style={{ marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    <div>
+                      <h3 style={{ margin: 0 }}>All Exam Questions</h3>
+                      <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                        Total: <strong>{allQuestions.length}</strong> &nbsp;·&nbsp; Showing: <strong>{filtered.length}</strong>
+                        {filterTeacher !== 'all' && <> &nbsp;·&nbsp; Teacher: <strong>{teacherMap[filterTeacher]}</strong></>}
+                        {filterSubject !== 'all' && <> &nbsp;·&nbsp; Subject: <strong>{filterSubject}</strong></>}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {/* Teacher filter */}
+                      <select
+                        value={filterTeacher}
+                        onChange={(e) => setFilterTeacher(e.target.value)}
+                        className="grant-select"
+                      >
+                        <option value="all">👨‍🏫 All Teachers ({allQuestions.length})</option>
+                        {teachers.map(([id, email]) => {
+                          const cnt = allQuestions.filter(q => q.teacherId === id).length;
+                          return (
+                            <option key={id} value={id}>{email} ({cnt})</option>
+                          );
+                        })}
+                      </select>
+                      {/* Subject filter */}
+                      <select
+                        value={filterSubject}
+                        onChange={(e) => setFilterSubject(e.target.value)}
+                        className="grant-select"
+                      >
+                        {ALL_SUBJECTS.map(s => {
+                          const cnt = s.id === 'all'
+                            ? allQuestions.length
+                            : allQuestions.filter(q => q.subject === s.id).length;
+                          return <option key={s.id} value={s.id}>{s.label} ({cnt})</option>;
+                        })}
+                      </select>
+                      <button className="confirm-grant-btn" onClick={() => setActiveTab('add-exam')}>+ Add Question</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* Receipt Preview Modal */}
-          {previewReceipt && (
-            <div className="receipt-modal-overlay" onClick={() => setPreviewReceipt(null)}>
-              <div className="receipt-modal-content" onClick={e => e.stopPropagation()}>
-                <button className="close-receipt" onClick={() => setPreviewReceipt(null)}>×</button>
-                <img src={previewReceipt} alt="Proof of Payment" />
-              </div>
-            </div>
-          )}
+                {/* Teacher summary cards — shown when viewing all teachers */}
+                {filterTeacher === 'all' && teachers.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    {teachers.map(([id, email]) => {
+                      const cnt = allQuestions.filter(q => q.teacherId === id).length;
+                      const approved = allQuestions.filter(q => q.teacherId === id && q.status === 'approved').length;
+                      const pending  = allQuestions.filter(q => q.teacherId === id && q.status === 'pending').length;
+                      return (
+                        <div
+                          key={id}
+                          onClick={() => setFilterTeacher(id)}
+                          style={{
+                            background: 'var(--card-bg, #f8fafc)', border: '1px solid #e2e8f0',
+                            borderRadius: '12px', padding: '0.75rem 1rem', cursor: 'pointer',
+                            minWidth: '200px', transition: 'box-shadow 0.2s'
+                          }}
+                          title="Click to filter by this teacher"
+                        >
+                          <div style={{ fontWeight: '700', fontSize: '0.85rem', marginBottom: '4px' }}>👨‍🏫 {email}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                            <span style={{ marginRight: '8px' }}>📝 {cnt} total</span>
+                            <span style={{ marginRight: '8px', color: '#10b981' }}>✅ {approved}</span>
+                            <span style={{ color: '#f59e0b' }}>⏳ {pending}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
-          {/* Exam Preview Modal */}
-          {previewExam && (
-            <div className="grant-modal-overlay" onClick={() => setPreviewExam(null)}>
-              <div className="grant-modal-card" style={{maxWidth: '600px', textAlign: 'left'}} onClick={e => e.stopPropagation()}>
-                <div className="modal-icon">📝</div>
-                <h3 style={{textAlign: 'center'}}>Review Question</h3>
-                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem', color: '#64748b'}}>
-                  <span><strong>Subject:</strong> {previewExam.subject}</span>
-                  <span><strong>Teacher:</strong> {previewExam.teacherEmail}</span>
-                </div>
-                
-                <div style={{background: '#f8fafc', padding: '20px', borderRadius: '12px', margin: '15px 0', border: '1px solid #e2e8f0'}}>
-                  <p style={{fontWeight: '700', fontSize: '1.1rem', marginBottom: '15px', color: '#1e293b'}}>{previewExam.question}</p>
-                  <ul style={{listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                    {previewExam.options.map((opt, i) => (
-                      <li key={i} style={{
-                        padding: '12px', 
-                        borderRadius: '8px',
-                        background: previewExam.correct === i ? '#dcfce7' : 'white',
-                        border: previewExam.correct === i ? '2px solid #22c55e' : '1px solid #cbd5e1',
-                        color: previewExam.correct === i ? '#166534' : '#334155',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}>
-                        <span><strong>{String.fromCharCode(65 + i)}.</strong> {opt}</span>
-                        {previewExam.correct === i && <span style={{fontSize: '0.8rem', fontWeight: 'bold', background: '#22c55e', color: 'white', padding: '2px 6px', borderRadius: '4px'}}>Correct Answer</span>}
-                      </li>
+                {questionsLoading ? (
+                  <div className="payment-loading"><div className="spinner" /><p>Loading questions...</p></div>
+                ) : filtered.length === 0 ? (
+                  <div className="payment-empty"><p>No questions match the selected filters.</p></div>
+                ) : (
+                  <div className="payment-table-wrap">
+                    {Object.entries(grouped).map(([subject, qs]) => (
+                      <div key={subject} style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                          <h4 style={{ margin: 0 }}>{subject}</h4>
+                          <span style={{
+                            background: '#6366f1', color: 'white',
+                            borderRadius: '999px', padding: '2px 10px',
+                            fontSize: '0.78rem', fontWeight: '700'
+                          }}>
+                            {qs.length} question{qs.length !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                        <table className="payment-table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Question</th>
+                              <th>Teacher</th>
+                              <th>Status</th>
+                              <th>Date</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {qs.map((q, idx) => (
+                              <tr key={q.id}>
+                                <td>{idx + 1}</td>
+                                <td style={{ maxWidth: '280px' }}>{q.question}</td>
+                                <td style={{ fontSize: '0.82rem', color: '#4f46e5' }}>
+                                  {q.teacherEmail || '—'}
+                                </td>
+                                <td>
+                                  <span className={`status-badge status-${q.status}`}>
+                                    {q.status === 'approved' ? '✅ Approved' : '⏳ Pending'}
+                                  </span>
+                                </td>
+                                <td style={{ fontSize: '0.8rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                                  {q.createdAt?.seconds
+                                    ? new Date(q.createdAt.seconds * 1000).toLocaleDateString()
+                                    : '—'}
+                                </td>
+                                <td>
+                                  <button className="delete-button" onClick={() => handleDeleteQuestion(q.id)}>Delete</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ))}
-                  </ul>
-                  {previewExam.explanation && (
-                    <div style={{marginTop: '15px', padding: '12px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe'}}>
-                      <strong style={{color: '#1d4ed8', display: 'block', marginBottom: '4px'}}>💡 Explanation:</strong> 
-                      <span style={{color: '#1e3a8a'}}>{previewExam.explanation}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="modal-actions" style={{justifyContent: 'center', gap: '15px', marginTop: '20px'}}>
-                  <button 
-                    className="confirm-grant-btn" 
-                    style={{background: '#10b981', flex: 1}}
-                    onClick={() => {
-                      handleApproveExam(previewExam.id);
-                      setPreviewExam(null);
-                    }}
-                  >
-                    ✅ Approve Question
-                  </button>
-                  <button 
-                    className="delete-button" 
-                    style={{flex: 1}}
-                    onClick={() => {
-                      handleRejectExam(previewExam.id);
-                      setPreviewExam(null);
-                    }}
-                  >
-                    ❌ Reject
-                  </button>
-                  <button className="cancel-grant-btn" style={{flex: 1}} onClick={() => setPreviewExam(null)}>
-                    Close Preview
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {activeTab === 'add-exam' && (
             <div className="admin-content">
@@ -954,6 +1038,104 @@ const AdminHome = () => {
 
         </div>
       </main>
+
+      {/* ── Global Modals (outside content area so they overlay everything) ── */}
+
+      {grantingFor && (
+        <div className="grant-modal-overlay" onClick={() => setGrantingFor(null)}>
+          <div className="grant-modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-icon">🗝️</div>
+            <h3>Verify Subject Access</h3>
+            <p>Granting access to: <strong>{grantingFor.userEmail || grantingFor.email}</strong></p>
+            <div className="grant-form">
+              <label className="grant-label">Choose Access Level:</label>
+              <select
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                className="grant-select"
+              >
+                <option value="all">🚀 Full Access (All Subjects)</option>
+                <option value="physics">Physics</option>
+                <option value="chemistry">Chemistry</option>
+                <option value="biology">Biology</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="history">History</option>
+                <option value="geography">Geography</option>
+                <option value="economics">Economics</option>
+                <option value="civics">Civics</option>
+                <option value="english">English</option>
+              </select>
+              <div className="modal-actions">
+                <button className="confirm-grant-btn" onClick={handleManualGrantFinal} disabled={isGranting}>
+                  {isGranting ? 'Updating Permissions...' : 'Verify Access Now'}
+                </button>
+                <button className="cancel-grant-btn" onClick={() => setGrantingFor(null)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {previewReceipt && (
+        <div className="receipt-modal-overlay" onClick={() => setPreviewReceipt(null)}>
+          <div className="receipt-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-receipt" onClick={() => setPreviewReceipt(null)}>×</button>
+            <img src={previewReceipt} alt="Proof of Payment" />
+          </div>
+        </div>
+      )}
+
+      {previewExam && (
+        <div className="grant-modal-overlay" onClick={() => setPreviewExam(null)}>
+          <div className="grant-modal-card" style={{maxWidth: '600px', textAlign: 'left'}} onClick={e => e.stopPropagation()}>
+            <div className="modal-icon">📝</div>
+            <h3 style={{textAlign: 'center'}}>Review Question</h3>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem', color: '#64748b'}}>
+              <span><strong>Subject:</strong> {previewExam.subject}</span>
+              <span><strong>Teacher:</strong> {previewExam.teacherEmail}</span>
+            </div>
+            <div style={{background: '#f8fafc', padding: '20px', borderRadius: '12px', margin: '15px 0', border: '1px solid #e2e8f0'}}>
+              <p style={{fontWeight: '700', fontSize: '1.1rem', marginBottom: '15px', color: '#1e293b'}}>{previewExam.question}</p>
+              <ul style={{listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                {previewExam.options.map((opt, i) => (
+                  <li key={i} style={{
+                    padding: '12px', borderRadius: '8px',
+                    background: previewExam.correct === i ? '#dcfce7' : 'white',
+                    border: previewExam.correct === i ? '2px solid #22c55e' : '1px solid #cbd5e1',
+                    color: previewExam.correct === i ? '#166534' : '#334155',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                  }}>
+                    <span><strong>{String.fromCharCode(65 + i)}.</strong> {opt}</span>
+                    {previewExam.correct === i && (
+                      <span style={{fontSize: '0.8rem', fontWeight: 'bold', background: '#22c55e', color: 'white', padding: '2px 6px', borderRadius: '4px'}}>Correct Answer</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {previewExam.explanation && (
+                <div style={{marginTop: '15px', padding: '12px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe'}}>
+                  <strong style={{color: '#1d4ed8', display: 'block', marginBottom: '4px'}}>💡 Explanation:</strong>
+                  <span style={{color: '#1e3a8a'}}>{previewExam.explanation}</span>
+                </div>
+              )}
+            </div>
+            <div className="modal-actions" style={{justifyContent: 'center', gap: '15px', marginTop: '20px'}}>
+              <button className="confirm-grant-btn" style={{background: '#10b981', flex: 1}}
+                onClick={() => { handleApproveExam(previewExam.id); setPreviewExam(null); }}>
+                ✅ Approve Question
+              </button>
+              <button className="delete-button" style={{flex: 1}}
+                onClick={() => { handleRejectExam(previewExam.id); setPreviewExam(null); }}>
+                ❌ Reject
+              </button>
+              <button className="cancel-grant-btn" style={{flex: 1}} onClick={() => setPreviewExam(null)}>
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
